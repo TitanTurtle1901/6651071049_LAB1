@@ -24,11 +24,14 @@ if(a=g("[data-add]")){const id=+a.dataset.add,x=cart.find(c=>c.id===id);x?x.q++:
 if(a=g("[data-wish]")){const id=+a.dataset.wish;wish.has(id)?wish.delete(id):wish.add(id);renderCart();toast("Đã cập nhật yêu thích")}
 if(a=g("[data-view]"))toast(products[a.dataset.view-1].name+" - "+products[a.dataset.view-1].rating+"/5 ★");
 if(a=g("[data-q]")){const x=cart.find(c=>c.id===+a.dataset.q);x.q+=+a.dataset.d;if(x.q<1)cart=cart.filter(c=>c!==x);renderCart()}
-if(a=g("[data-f]")){term="";setFilter(a.dataset.f);$("featured").scrollIntoView({behavior:"smooth"})}
+if(a=g("[data-f]")){term="";setFilter(a.dataset.f);if(!desk.matches)setDep(false);$("featured").scrollIntoView({behavior:"smooth"})}
 if(a=g("[data-car]")){catOff=(catOff+(a.classList.contains("l")?cats.length-1:1))%cats.length;renderCats()}
 if(a=g("[data-sl]")){const k=+a.dataset.sl,prev=a===a.parentElement.firstElementChild;lsOff[k]=(lsOff[k]+(prev?products.length-1:1))%products.length;renderLists()}});
-$("depBtn").onclick=()=>$("depSide").style.display=$("depSide").style.display==="none"?"block":"none";
-$("depSide").innerHTML=$("depList").innerHTML;
+$("depSide").innerHTML="<ul>"+$("depList").innerHTML+"</ul>";
+const desk=matchMedia("(min-width:901px)");
+const setDep=o=>$("depSide").classList.toggle("open",o);
+setDep(desk.matches);desk.onchange=e=>setDep(e.matches);
+$("depBtn").onclick=()=>setDep(!$("depSide").classList.contains("open"));
 $("searchForm").onsubmit=e=>{e.preventDefault();term=$("searchInput").value.trim().toLowerCase();setFilter($("searchCat").value);$("featured").scrollIntoView({behavior:"smooth"})};
 const open=()=>{$("drawer").classList.add("open");$("ov").classList.add("show")},close=()=>{$("drawer").classList.remove("open");$("ov").classList.remove("show")};
 $("cartOpen").onclick=open;$("cartClose").onclick=close;$("ov").onclick=close;
